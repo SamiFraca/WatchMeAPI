@@ -52,3 +52,13 @@ C:\Users\A8-PC100\Desktop\WatchMe\obj\Debug\net6.0\WatchMe.dll
 C:\Users\A8-PC100\Desktop\WatchMe\obj\Debug\net6.0\refint\WatchMe.dll
 C:\Users\A8-PC100\Desktop\WatchMe\obj\Debug\net6.0\WatchMe.genruntimeconfig.cache
 C:\Users\A8-PC100\Desktop\WatchMe\obj\Debug\net6.0\ref\WatchMe.dll
+C:\Users\A8-PC100\Desktop\WatchMeAPI\WatchMe\obj\Debug\net6.0\WatchMe.csproj.AssemblyReference.cache
+C:\Users\A8-PC100\Desktop\WatchMeAPI\WatchMe\obj\Debug\net6.0\WatchMe.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\A8-PC100\Desktop\WatchMeAPI\WatchMe\obj\Debug\net6.0\WatchMe.AssemblyInfoInputs.cache
+C:\Users\A8-PC100\Desktop\WatchMeAPI\WatchMe\obj\Debug\net6.0\WatchMe.AssemblyInfo.cs
+C:\Users\A8-PC100\Desktop\WatchMeAPI\WatchMe\obj\Debug\net6.0\WatchMe.csproj.CoreCompileInputs.cache
+C:\Users\A8-PC100\Desktop\WatchMeAPI\WatchMe\obj\Debug\net6.0\WatchMe.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\A8-PC100\Desktop\WatchMeAPI\WatchMe\obj\Debug\net6.0\WatchMe.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\A8-PC100\Desktop\WatchMeAPI\WatchMe\obj\Debug\net6.0\WatchMe.dll
+C:\Users\A8-PC100\Desktop\WatchMeAPI\WatchMe\obj\Debug\net6.0\refint\WatchMe.dll
+C:\Users\A8-PC100\Desktop\WatchMeAPI\WatchMe\obj\Debug\net6.0\WatchMe.pdb

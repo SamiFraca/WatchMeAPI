@@ -810,11 +810,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\A8-PC100\\Desktop\\WatchMe\\WatchMe.csproj",
+      "projectUniqueName": "C:\\Users\\A8-PC100\\Desktop\\WatchMeAPI\\WatchMe\\WatchMe.csproj",
       "projectName": "WatchMe",
-      "projectPath": "C:\\Users\\A8-PC100\\Desktop\\WatchMe\\WatchMe.csproj",
+      "projectPath": "C:\\Users\\A8-PC100\\Desktop\\WatchMeAPI\\WatchMe\\WatchMe.csproj",
       "packagesPath": "C:\\Users\\A8-PC100\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\A8-PC100\\Desktop\\WatchMe\\obj\\",
+      "outputPath": "C:\\Users\\A8-PC100\\Desktop\\WatchMeAPI\\WatchMe\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\A8-PC100\\AppData\\Roaming\\NuGet\\NuGet.Config",

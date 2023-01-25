@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "yJut5vZYVVDsSLC+7yRdfmVJiOOCQ5nU7sNYF9XPJ/Aw/J1etMOgiOIlPYRdic8s6Te3vfimPc8Qfk+6avfBYg==",
+  "dgSpecHash": "IYFxBa101L9ace/IjM9+49+8pGDGm0WaXK/7a6tnwwDs6qsXxt4AWXubW3OsgbKWWnQxlw/SfeyAnAYeaQC5fA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\A8-PC100\\Desktop\\WatchMe\\WatchMe.csproj",
+  "projectFilePath": "C:\\Users\\A8-PC100\\Desktop\\WatchMeAPI\\WatchMe\\WatchMe.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\A8-PC100\\.nuget\\packages\\microsoft.entityframeworkcore\\7.0.2\\microsoft.entityframeworkcore.7.0.2.nupkg.sha512",
     "C:\\Users\\A8-PC100\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\7.0.2\\microsoft.entityframeworkcore.abstractions.7.0.2.nupkg.sha512",
