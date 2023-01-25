@@ -13,7 +13,7 @@ namespace WatchMe
             /*
             builder.Services.AddDbContext<DataContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DataContext")))*/
-            builder.Services.AddDbContext<AppDbContext> (o => o.UseInMemoryDatabase("WatchMeInMemory"));
+            builder.Services.AddDbContext<DataContext> (o => o.UseInMemoryDatabase("WatchMeInMemory"));
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
