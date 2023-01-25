@@ -1,6 +1,8 @@
 using WatchMe.Models;
 using WatchMe.Services;
 using Microsoft.AspNetCore.Mvc;
+using WatchMe.Data;
+using System.Collections.Generic;
 
 namespace WatchMe.Controllers
 {
@@ -30,44 +32,71 @@ namespace WatchMe.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
-            var User = UserService.Get(id);
-
-            if (User == null)
+            if (_dbContext.Users == null)
+            {
                 return NotFound();
-
-            return await User;
+            }
+            var User = await _dbContext.Users.FindAsync(id);
+            if (User == null)
+            {
+                return NotFound();
+            }
+            return User;
         }
         [HttpPost]
-        public IActionResult Create(User User)
+        public Task<IActionResult<User>> PostUser(User User)
         {
-            UserService.Add(User);
-            return CreatedAtAction(nameof(Get), new { id = User.Id }, User);
+            _dbContext.Users.Add(User);
+            await _dbContext.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetUser), new { id = User.Id }, User);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, User User)
+        public async Task<IActionResult> PutUser(int id, User User)
         {
             if (id != User.Id)
+            {
                 return BadRequest();
-
-            var existingUser = UserService.Get(id);
-            if (existingUser is null)
-                return NotFound();
-
-            UserService.Update(User);
-
+            }
+            _dbContext.Entry(User).State = EntityState.Modified;
+            try
+            {
+                await db_Context.SaveChangeAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!MovieExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
             return NoContent();
         }
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+
+        private bool UserExists(long id)
         {
-            var User = UserService.Get(id);
+            return (_dbContext.Users?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
             if (User is null)
+            {
                 return NotFound();
+            }
 
-            UserService.Delete(id);
-
+            var User = await _dbContext.Users.FindAsync(id);
+            if (User == null)
+            {
+                return NotFound();
+            }
+            _dbContext.Users.Remove(User);
+            await _dbContext.SaveChangeAsync();
             return NoContent();
         }
     }
