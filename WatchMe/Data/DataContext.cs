@@ -8,7 +8,7 @@ namespace WatchMe.Data
         : base(options)
         {
         }
-        DbSet<Bar> Bars { get; set; } = null!;
-        DbSet<User> Users { get; set; } = null!;
+        public DbSet<Bar> Bars { get; set; } = null!;
+        public DbSet<User> Users { get; set; } = null!;
     }
 }

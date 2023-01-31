@@ -3,6 +3,7 @@ using WatchMe.Services;
 using Microsoft.AspNetCore.Mvc;
 using WatchMe.Data;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace WatchMe.Controllers
 {
@@ -44,7 +45,7 @@ namespace WatchMe.Controllers
             return User;
         }
         [HttpPost]
-        public Task<IActionResult<User>> PostUser(User User)
+        public async Task<ActionResult<User>> PostUser(User User)
         {
             _dbContext.Users.Add(User);
             await _dbContext.SaveChangesAsync();
@@ -61,11 +62,11 @@ namespace WatchMe.Controllers
             _dbContext.Entry(User).State = EntityState.Modified;
             try
             {
-                await db_Context.SaveChangeAsync();
+                await _dbContext.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!MovieExists(id))
+                if (!UserExists(id))
                 {
                     return NotFound();
                 }
@@ -85,7 +86,7 @@ namespace WatchMe.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            if (User is null)
+            if (_dbContext.Users is null)
             {
                 return NotFound();
             }
@@ -96,7 +97,7 @@ namespace WatchMe.Controllers
                 return NotFound();
             }
             _dbContext.Users.Remove(User);
-            await _dbContext.SaveChangeAsync();
+            await _dbContext.SaveChangesAsync();
             return NoContent();
         }
     }
