@@ -1,6 +1,5 @@
 using WatchMe.Data;
 using Microsoft.EntityFrameworkCore;
-
 namespace WatchMe
 {
     public class Program
@@ -13,17 +12,24 @@ namespace WatchMe
             /*
             builder.Services.AddDbContext<DataContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DataContext")))*/
-            builder.Services.AddDbContext<DataContext> (o => o.UseInMemoryDatabase("WatchMeInMemory"));
+            builder.Services.AddDbContext<DataContext>(options =>
+           options.UseSqlServer(builder.Configuration.GetConnectionString("WatchMeDb")));
+
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
-
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
+                using (var scope = app.Services.CreateScope())
+                {
+                    var dataContext = scope.ServiceProvider.GetRequiredService<DataContext>();
+                    dataContext.Database.EnsureCreated();
+                    dataContext.Seed();
+                }
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
