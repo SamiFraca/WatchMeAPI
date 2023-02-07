@@ -1,3 +1,11 @@
 https://medium.com/net-core/build-a-restful-web-api-with-asp-net-core-6-30747197e229
 https://www.infoworld.com/article/3672154/how-to-use-ef-core-as-an-in-memory-database-in-asp-net-core-6.html
 https://www.twilio.com/blog/containerize-your-sql-server-with-docker-and-aspnet-core-with-ef-core
+
+install sdfk NET 6.0
+dotnet tool install --global dotnet-ef
+dotnet ef migrations add InitialMigration
+dotnet ef database update
+dotnet add package Microsoft.EntityFrameworkCore.Design
+
+CLEAN DATA FROM DB
