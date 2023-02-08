@@ -29,7 +29,7 @@ namespace WatchMe.Data
                    MyBar = new Bar {
                        Name = "Classic sddddd", Location = "Zaragoza",Capacity = 50,
                         Show = new Show {
-                           Title= "Francia - España (Eurocopa)", Start = new DateTime(2108, 3, 1, 7, 0, 0, DateTimeKind.Utc), End= new DateTime(2028, 3, 1, 7, 0, 0, DateTimeKind.Utc)
+                           Title= "Francias - España (Eurocopa)", Start = new DateTime(2108, 3, 1, 7, 0, 0, DateTimeKind.Utc), End= new DateTime(2028, 3, 1, 7, 0, 0, DateTimeKind.Utc)
                            }
                          }
                         },
