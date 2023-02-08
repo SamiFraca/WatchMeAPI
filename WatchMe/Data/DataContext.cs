@@ -10,5 +10,6 @@ namespace WatchMe.Data
         }
         public DbSet<Bar> Bars { get; set; } = null!;
         public DbSet<User> Users { get; set; } = null!;
+        public DbSet<Show> Shows { get; set; } = null!;
     }
 }
