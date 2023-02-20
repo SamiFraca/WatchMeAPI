@@ -33,14 +33,15 @@ jobs:
         with:
           name: .net-app
           path: ${{env.DOTNET_ROOT}}/myapp
-
+          app_location: "WatchMe"
+ 
   deploy:
     runs-on: windows-latest
     needs: build
     environment:
       name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}/WatchMe
-
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+  
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
