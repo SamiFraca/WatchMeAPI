@@ -22,17 +22,14 @@ namespace WatchMe
 
             var app = builder.Build();
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+            using (var scope = app.Services.CreateScope())
             {
-                using (var scope = app.Services.CreateScope())
-                {
-                    var dataContext = scope.ServiceProvider.GetRequiredService<DataContext>();
-                    dataContext.Database.EnsureCreated();
-                    dataContext.Seed();
-                }
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                var dataContext = scope.ServiceProvider.GetRequiredService<DataContext>();
+                dataContext.Database.EnsureCreated();
+                dataContext.Seed();
             }
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseHttpsRedirection();
 
