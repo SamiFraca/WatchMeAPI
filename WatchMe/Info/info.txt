@@ -14,3 +14,9 @@ dotnet add package Microsoft.EntityFrameworkCore.Design
 
 dotnet ef migrations add InitialMigration
 dotnet ef database update
+
+
+How to connect database to azure data studio:
+Server: localhost,1433 -> Be aware of the coma.
+Username & Password: See appsettings.json file. (ConnectionString)
+
