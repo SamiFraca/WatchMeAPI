@@ -34,6 +34,7 @@ jobs:
           name: .net-app
           path: ${{env.DOTNET_ROOT}}/myapp
           app_location: "WatchMe"
+          api_location: "WatchMe"
  
   deploy:
     runs-on: windows-latest
