@@ -1,0 +1,23 @@
+https://medium.com/net-core/build-a-restful-web-api-with-asp-net-core-6-30747197e229
+https://www.infoworld.com/article/3672154/how-to-use-ef-core-as-an-in-memory-database-in-asp-net-core-6.html
+https://www.twilio.com/blog/containerize-your-sql-server-with-docker-and-aspnet-core-with-ef-core
+
+Be sure you have sdfk NET 6.0 installed.
+install sdfk NET 6.0
+https://dotnet.microsoft.com/en-us/download/dotnet/6.0
+
+run this docker on command propmt: 
+docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=AVeryComplex(!)123Password" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest
+
+Add tools for dotnet ef core:
+dotnet tool install --global dotnet-ef
+dotnet add package Microsoft.EntityFrameworkCore.Design
+
+dotnet ef migrations add InitialMigration
+dotnet ef database update
+
+
+How to connect database to azure data studio:
+Server: localhost,1433 -> Be aware of the coma.
+Username & Password: See appsettings.json file. (ConnectionString)
+
