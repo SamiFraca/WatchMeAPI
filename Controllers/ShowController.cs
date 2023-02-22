@@ -1,5 +1,4 @@
 using WatchMe.Models;
-using WatchMe.Services;
 using Microsoft.AspNetCore.Mvc;
 using WatchMe.Data;
 using System.Collections.Generic;
@@ -12,7 +11,7 @@ namespace WatchMe.Controllers
     [Route("[controller]")]
     public class ShowsController : ControllerBase
     {
-         private readonly DataContext _dbContext;
+        private readonly DataContext _dbContext;
         private readonly ILogger<ShowsController> _logger;
         public ShowsController(DataContext dbContext)
         {
