@@ -1,0 +1,11 @@
+version: '3.3'
+services:
+    run:
+        environment:
+            - ACCEPT_EULA=Y
+            - MSSQL_SA_PASSWORD=AVeryComplex(!)123Password
+        ports:
+            - '6126:1433'
+        image: mcr.microsoft.com/mssql/server:2022-latest
+
+
