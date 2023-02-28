@@ -6,8 +6,8 @@ Be sure you have sdfk NET 6.0 installed.
 install sdfk NET 6.0
 https://dotnet.microsoft.com/en-us/download/dotnet/6.0
 
-run this docker on command propmt: 
-docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=AVeryComplex(!)123Password" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest
+
+docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=AVeryComplex(!)123Password" -p 6126:1433 -d mcr.microsoft.com/mssql/server:2022-latest
 
 Add tools for dotnet ef core:
 dotnet tool install --global dotnet-ef
