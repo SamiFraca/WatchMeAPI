@@ -1,5 +1,4 @@
 using WatchMe.Models;
-using WatchMe.Services;
 using Microsoft.AspNetCore.Mvc;
 using WatchMe.Data;
 using System.Collections.Generic;
@@ -12,7 +11,7 @@ namespace WatchMe.Controllers
     [Route("[controller]")]
     public class BarsController : ControllerBase
     {
-         private readonly DataContext _dbContext;
+        private readonly DataContext _dbContext;
         private readonly ILogger<BarsController> _logger;
         public BarsController(DataContext dbContext)
         {
@@ -22,11 +21,17 @@ namespace WatchMe.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Bar>>> GetBars()
         {
+
             if (_dbContext.Bars == null)
             {
                 return NotFound();
             }
+            var bars = _dbContext.Bars
+                        .Include(bar => bar.Shows)
+                        //  .Where(bar => bar.)
+                        .ToListAsync();
             return await _dbContext.Bars.ToListAsync();
+            //    return await bars;
         }
 
         [HttpGet("{id}")]

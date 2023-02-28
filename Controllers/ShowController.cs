@@ -1,5 +1,4 @@
 using WatchMe.Models;
-using WatchMe.Services;
 using Microsoft.AspNetCore.Mvc;
 using WatchMe.Data;
 using System.Collections.Generic;
@@ -12,7 +11,7 @@ namespace WatchMe.Controllers
     [Route("[controller]")]
     public class ShowsController : ControllerBase
     {
-         private readonly DataContext _dbContext;
+        private readonly DataContext _dbContext;
         private readonly ILogger<ShowsController> _logger;
         public ShowsController(DataContext dbContext)
         {
@@ -46,9 +45,13 @@ namespace WatchMe.Controllers
         [HttpPost]
         public async Task<ActionResult<Show>> PostShow(Show Show)
         {
-            _dbContext.Shows.Add(Show);
-            await _dbContext.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetShow), new { id = Show.Id }, Show);
+            if (Show.BarId != 0 || Show.BarId != null)
+            {
+                _dbContext.Shows.Add(Show);
+                await _dbContext.SaveChangesAsync();
+                return CreatedAtAction(nameof(GetShow), new { id = Show.Id }, Show);
+            }
+            return BadRequest();
         }
 
         [HttpPut("{id}")]

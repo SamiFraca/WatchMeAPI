@@ -1,5 +1,4 @@
 using WatchMe.Models;
-using WatchMe.Services;
 using Microsoft.AspNetCore.Mvc;
 using WatchMe.Data;
 using System.Collections.Generic;
