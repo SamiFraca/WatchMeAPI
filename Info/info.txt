@@ -21,3 +21,5 @@ How to connect database to azure data studio:
 Server: localhost,1433 -> Be aware of the coma.
 Username & Password: See appsettings.json file. (ConnectionString)
 
+efcore include select examples
+entityframeworktutorial
