@@ -30,7 +30,7 @@ namespace WatchMe.Controllers
                         .Include(bar => bar.Shows)
                         //  .Where(bar => bar.)
                         .ToListAsync();
-            return await _dbContext.Bars.ToListAsync();
+            return await bars;
             //    return await bars;
         }
 
