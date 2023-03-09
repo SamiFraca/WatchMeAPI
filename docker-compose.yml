@@ -15,6 +15,7 @@ services:
         environment:
             - ACCEPT_EULA=Y
             - MSSQL_SA_PASSWORD=AVeryComplex(!)123Password
+            - MSSQL_SA_USER=sa
         ports:
             - '6126:1433'
         image: mcr.microsoft.com/mssql/server:2022-latest
