@@ -7,6 +7,6 @@ namespace WatchMe.Models
         public string Name { get; set; }
         public string Location { get; set; }
         public int Capacity { get; set; }
-        public ICollection<Show> Shows { get; set; }
+        public ICollection<Show>? Shows { get; set; }
     }
 }

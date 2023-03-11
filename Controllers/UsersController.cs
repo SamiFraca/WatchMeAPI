@@ -22,11 +22,15 @@ namespace WatchMe.Controllers
         [HttpGet]
         public async Task<ActionResult<List<User>>> GetUsers()
         {
+            var users = _dbContext.Users
+                        .Include(user => user.MyBar)
+                        //  .Where(bar => bar.)
+                        .ToListAsync();
             if (_dbContext.Users == null)
             {
                 return NotFound();
             }
-            return await _dbContext.Users.ToListAsync();
+            return await users;
         }
 
         [HttpGet("{id}")]
@@ -46,7 +50,11 @@ namespace WatchMe.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User User)
         {
-            _dbContext.Users.Add(User);
+             if (User.MyBar == null) {
+               // do something if MyBar is null, such as setting a default value
+               User.MyBar = new Bar { Id = 0, Name = "Unknown",Location="None",Capacity= 0,Shows=null };
+             }
+             _dbContext.Users.Add(User);
             await _dbContext.SaveChangesAsync();
             return CreatedAtAction(nameof(GetUser), new { id = User.Id }, User);
         }
