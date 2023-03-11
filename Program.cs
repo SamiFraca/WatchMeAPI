@@ -28,6 +28,15 @@ namespace WatchMe
                 dataContext.Database.EnsureCreated();
                 dataContext.Seed();
             }
+            public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+            {
+            
+                app.UseCors(builder => builder
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
+            
+            }
             app.UseSwagger();
             app.UseSwaggerUI();
 
