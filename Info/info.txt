@@ -23,3 +23,7 @@ Username & Password: See appsettings.json file. (ConnectionString)
 
 efcore include select examples
 entityframeworktutorial
+
+if database location from localhost to docker wants to be changed, connectionstring needs to be changed from "Server=localhost,6126" to "Server=sqlserver" 
+so it can aim to the api server
+Might need to comment line 26 to 36 on Program.cs, exluding the "var app = builder.Build();" line.

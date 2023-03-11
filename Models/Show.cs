@@ -9,5 +9,6 @@ namespace WatchMe.Models
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
         public int BarId { get; set; }
+        public string Sport { get;set; }
     }
 }

@@ -17,7 +17,7 @@ namespace WatchMe
             options.UseSqlServer(builder.Configuration.GetConnectionString("DataContext")))*/
             builder.Services.AddDbContext<DataContext>(
                 options =>
-                    options.UseSqlServer(builder.Configuration.GetConnectionString("WatchMeDb")).UseLazyLoadingProxies(false)
+                    options.UseSqlServer(builder.Configuration.GetConnectionString("WatchMeDb"))
             );
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
