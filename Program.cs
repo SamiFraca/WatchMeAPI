@@ -1,5 +1,8 @@
 using WatchMe.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+
 namespace WatchMe
 {
     public class Program
@@ -12,8 +15,10 @@ namespace WatchMe
             /*
             builder.Services.AddDbContext<DataContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DataContext")))*/
-            builder.Services.AddDbContext<DataContext>(options =>
-           options.UseSqlServer(builder.Configuration.GetConnectionString("WatchMeDb")));
+            builder.Services.AddDbContext<DataContext>(
+                options =>
+                    options.UseSqlServer(builder.Configuration.GetConnectionString("WatchMeDb"))
+            );
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -28,15 +33,8 @@ namespace WatchMe
                 dataContext.Database.EnsureCreated();
                 dataContext.Seed();
             }
-            public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-            {
-            
-                app.UseCors(builder => builder
-                    .AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader());
-            
-            }
+
+            // app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseSwagger();
             app.UseSwaggerUI();
 
