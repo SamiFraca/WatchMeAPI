@@ -31,6 +31,8 @@ namespace WatchMe.Data
                             Name = "Zona",
                             Location = "Zaragoza",
                             Capacity = 50,
+                            Description =
+                                "Experience the ultimate sports atmosphere at The Stadium Bar, with multiple big screens, great food, and drinks that will keep you cheering all night long.",
                             Shows = new Show[]
                             {
                                 new Show
@@ -59,6 +61,8 @@ namespace WatchMe.Data
                         {
                             Name = "Classic Italian",
                             Location = "Zaragoza",
+                            Description =
+                                "Step into the world of craft beers and delicious food at The Brew House, where you'll find an extensive selection of local and international brews and a cozy atmosphere perfect for a night out.",
                             Capacity = 50,
                             Shows = new Show[]
                             {
@@ -88,6 +92,8 @@ namespace WatchMe.Data
                         {
                             Name = "The Sports Bar",
                             Location = "New York City",
+                            Description =
+                                "Experience the ultimate sports atmosphere at The Stadium Bar, with multiple big screens, great food, and drinks that will keep you cheering all night long.",
                             Capacity = 100,
                             Shows = new Show[]
                             {
@@ -118,6 +124,8 @@ namespace WatchMe.Data
                             Name = "The Locker Room",
                             Location = "Los Angeles",
                             Capacity = 80,
+                            Description =
+                                "Get a taste of the Caribbean at The Tiki Bar, where the drinks are tropical and the music is lively. Relax under the palm trees and indulge in delicious island-inspired cuisine while you soak up the sun.",
                             Shows = new Show[]
                             {
                                 new Show
