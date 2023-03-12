@@ -25,7 +25,7 @@ namespace WatchMe
             builder.Services.AddSwaggerGen();
              builder.Services.AddCors(options =>
                          {
-                             options.AddPolicy(name: "frontend",
+                             options.AddPolicy(name: "AllowSpecificOrigins",
                                  policy =>
                                  {
                                      policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
@@ -33,7 +33,7 @@ namespace WatchMe
                          });
              builder.Services.AddMvc().AddMvcOptions(e => e.EnableEndpointRouting = false);
             var app = builder.Build();
-            app.UseCors("frontend");
+            app.UseCors("AllowSpecificOrigins");
             // Configure the HTTP request pipeline.
             using (var scope = app.Services.CreateScope())
             {
