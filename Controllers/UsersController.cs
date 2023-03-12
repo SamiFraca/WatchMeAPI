@@ -51,7 +51,6 @@ namespace WatchMe.Controllers
         public async Task<ActionResult<User>> PostUser(User User)
         {
              if (User.MyBar == null) {
-               // do something if MyBar is null, such as setting a default value
                User.MyBar = new Bar { Id = 0, Name = "Unknown",Location="None",Capacity= 0,Shows=null };
              }
              _dbContext.Users.Add(User);
