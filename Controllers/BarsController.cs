@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Cors;
 
-
 namespace WatchMe.Controllers
 {
     [EnableCors("AllowSpecificOrigins")]
@@ -59,7 +58,7 @@ namespace WatchMe.Controllers
                 return NotFound();
             }
             var bars = _dbContext.Bars
-                .Where(b => b.Location == receivedInput)
+                .Where(b => b.Location.Contains(receivedInput))
                 .Include(b => b.Shows)
                 .ToList();
 
