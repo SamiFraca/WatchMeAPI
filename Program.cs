@@ -23,17 +23,17 @@ namespace WatchMe
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            //  builder.Services.AddCors(options =>
-            //              {
-            //                  options.AddPolicy(name: "AllowSpecificOrigins",
-            //                      policy =>
-            //                      {
-            //                          policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-            //                      });
-            //              });
-            //  builder.Services.AddMvc().AddMvcOptions(e => e.EnableEndpointRouting = false);
+             builder.Services.AddCors(options =>
+                         {
+                             options.AddPolicy(name: "AllowSpecificOrigins",
+                                 policy =>
+                                 {
+                                     policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                                 });
+                         });
+             builder.Services.AddMvc().AddMvcOptions(e => e.EnableEndpointRouting = false);
             var app = builder.Build();
-            // app.UseCors("AllowSpecificOrigins");
+            app.UseCors("AllowSpecificOrigins");
             // Configure the HTTP request pipeline.
             using (var scope = app.Services.CreateScope())
             {
