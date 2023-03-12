@@ -1,0 +1,79 @@
+Bars Collection
+
+Get all bars
+Method: GET
+URL: https://watchmeapi-test.azurewebsites.net/bars
+Get a specific bar by ID
+
+Method: GET
+URL: https://watchmeapi-test.azurewebsites.net/bars/{id}
+URL Params:
+Required: id=[integer]: The ID of the bar to retrieve Search bars by location
+
+Method: GET
+URL: https://watchmeapi-test.azurewebsites.net/bars/locations
+Query Params:
+Required: location=[string]: The location to search for Search bars by name
+Method: GET
+URL: https://watchmeapi-test.azurewebsites.net/bars/names
+Query Params:
+Required: name=[string]: The name to search for
+Search bars by sport
+
+Method: GET
+URL: https://watchmeapi-test.azurewebsites.net/bars/shows/sports
+Query Params:
+Required: 
+sport=[string]: The sport to search for
+Add a new bar
+
+Method: POST
+URL: https://watchmeapi-test.azurewebsites.net/bars
+Body:
+json
+Copy code
+{
+  "name": "string",
+  "location": "string",
+  "capacity": 0,
+  "shows": [
+    {
+      "title": "string",
+      "start": "string",
+      "end": "string",
+      "sport": "string"
+    }
+  ],
+  "description": "string"
+}
+
+Update an existing bar
+Method: PUT
+URL: https://watchmeapi-test.azurewebsites.net/bars/{id}
+URL Params:
+Required:
+id=[integer]: The ID of the bar to update
+Body:json
+Copy code
+{
+  "id": 0,
+  "name": "string",
+  "location": "string",
+  "capacity": 0,
+  "shows": [
+    {
+      "title": "string",
+      "start": "string",
+      "end": "string",
+      "sport": "string"
+    }
+  ],
+  "description": "string"
+}
+
+Delete an existing bar
+Method: DELETE
+URL: https://watchmeapi-test.azurewebsites.net/bars/{id}
+URL Params:
+Required:
+id=[integer]: The ID of the bar to delete
