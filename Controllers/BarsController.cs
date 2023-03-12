@@ -3,16 +3,18 @@ using Microsoft.AspNetCore.Mvc;
 using WatchMe.Data;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Cors;
 
 namespace WatchMe.Controllers
 {
-
+    [EnableCors("AllowSpecificOrigins")]
     [ApiController]
     [Route("[controller]")]
     public class BarsController : ControllerBase
     {
         private readonly DataContext _dbContext;
         private readonly ILogger<BarsController> _logger;
+
         public BarsController(DataContext dbContext)
         {
             _dbContext = dbContext;
@@ -21,15 +23,14 @@ namespace WatchMe.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Bar>>> GetBars()
         {
-
             if (_dbContext.Bars == null)
             {
                 return NotFound();
             }
             var bars = _dbContext.Bars
-                        .Include(bar => bar.Shows)
-                        //  .Where(bar => bar.)
-                        .ToListAsync();
+                .Include(bar => bar.Shows)
+                //  .Where(bar => bar.)
+                .ToListAsync();
             return await bars;
             //    return await bars;
         }
@@ -48,6 +49,44 @@ namespace WatchMe.Controllers
             }
             return Bar;
         }
+
+        [HttpGet("locations")]
+        public IActionResult SearchLocation(string location)
+        {
+            if (_dbContext.Bars == null)
+            {
+                return NotFound();
+            }
+            var bars = _dbContext.Bars
+                .Where(b => b.Location.Contains(location))
+                .Include(b => b.Shows)
+                .ToList();
+
+            if (bars.Count == 0)
+            {
+                return NotFound($"No bars found with location '{location}'");
+            }
+            return Ok(bars);
+        }
+        [HttpGet("name")]
+        public IActionResult SearchName(string name)
+        {
+            if (_dbContext.Bars == null)
+            {
+                return NotFound();
+            }
+            var bars = _dbContext.Bars
+                .Where(b => b.Name.Contains(name))
+                .Include(b => b.Shows)
+                .ToList();
+
+            if (bars.Count == 0)
+            {
+                return NotFound($"No bars found with name '{name}'");
+            }
+            return Ok(bars);
+        }
+
         [HttpPost]
         public async Task<ActionResult<Bar>> PostBar(Bar Bar)
         {

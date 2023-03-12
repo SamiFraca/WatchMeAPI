@@ -1,6 +1,5 @@
 namespace WatchMe.Models
 {
-
     public class Bar
     {
         public int Id { get; set; }
@@ -8,5 +7,6 @@ namespace WatchMe.Models
         public string Location { get; set; }
         public int Capacity { get; set; }
         public ICollection<Show>? Shows { get; set; }
+        public string? Description { get; set; }
     }
 }
