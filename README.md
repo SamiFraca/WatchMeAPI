@@ -24,7 +24,7 @@ if database location from localhost to docker wants to be changed, connectionstr
 so it can aim to the api server
 Might need to comment line 26 to 36 on Program.cs, exluding the "var app = builder.Build();" line.
 
-SIMPLE WAY TO START TO REPO WITH DOCKER COMPOSE
+SIMPLE WAY TO START APP WITH DOCKER COMPOSE
 
 docker-compose build
 docker-compose up
