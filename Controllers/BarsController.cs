@@ -51,20 +51,38 @@ namespace WatchMe.Controllers
         }
 
         [HttpGet("locations")]
-        public IActionResult SearchLocation(string receivedInput)
+        public IActionResult SearchLocation(string location)
         {
             if (_dbContext.Bars == null)
             {
                 return NotFound();
             }
             var bars = _dbContext.Bars
-                .Where(b => b.Location.Contains(receivedInput))
+                .Where(b => b.Location.Contains(location))
                 .Include(b => b.Shows)
                 .ToList();
 
             if (bars.Count == 0)
             {
-                return NotFound($"No bars found with location '{receivedInput}'");
+                return NotFound($"No bars found with location '{location}'");
+            }
+            return Ok(bars);
+        }
+        [HttpGet("name")]
+        public IActionResult SearchName(string name)
+        {
+            if (_dbContext.Bars == null)
+            {
+                return NotFound();
+            }
+            var bars = _dbContext.Bars
+                .Where(b => b.Name.Contains(name))
+                .Include(b => b.Shows)
+                .ToList();
+
+            if (bars.Count == 0)
+            {
+                return NotFound($"No bars found with name '{name}'");
             }
             return Ok(bars);
         }
