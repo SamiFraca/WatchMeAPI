@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace WatchMe.Controllers
 {
-
     [ApiController]
     [Route("[controller]")]
     public class UsersController : ControllerBase
@@ -14,6 +13,7 @@ namespace WatchMe.Controllers
         //  public static List<User> allUser = User.GetUsersFromJSON();
         private readonly DataContext _dbContext;
         private readonly ILogger<UsersController> _logger;
+
         public UsersController(DataContext dbContext)
         {
             _dbContext = dbContext;
@@ -23,9 +23,9 @@ namespace WatchMe.Controllers
         public async Task<ActionResult<List<User>>> GetUsers()
         {
             var users = _dbContext.Users
-                        .Include(user => user.MyBar)
-                        //  .Where(bar => bar.)
-                        .ToListAsync();
+                .Include(user => user.MyBar)
+                //  .Where(bar => bar.)
+                .ToListAsync();
             if (_dbContext.Users == null)
             {
                 return NotFound();
@@ -47,13 +47,40 @@ namespace WatchMe.Controllers
             }
             return User;
         }
+
+        [HttpGet("auth/login")]
+        public async Task<ActionResult<User>> LoginVerify(string name, string password)
+        {
+            if (_dbContext.Users == null)
+            {
+                return NotFound();
+            }
+            var user = await _dbContext.Users.SingleOrDefaultAsync(
+                user => user.Username == name && user.Password == password
+            );
+            if (user == null)
+            {
+                return NotFound();
+            }
+            // var token = await GetToken(user.Username, user.Role);
+            return user;
+        }
+
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User User)
         {
-             if (User.MyBar == null) {
-               User.MyBar = new Bar { Id = 0, Name = "Unknown",Location="None",Capacity= 0,Shows=null };
-             }
-             _dbContext.Users.Add(User);
+            if (User.MyBar == null)
+            {
+                User.MyBar = new Bar
+                {
+                    Id = 0,
+                    Name = "Unknown",
+                    Location = "None",
+                    Capacity = 0,
+                    Shows = null
+                };
+            }
+            _dbContext.Users.Add(User);
             await _dbContext.SaveChangesAsync();
             return CreatedAtAction(nameof(GetUser), new { id = User.Id }, User);
         }
