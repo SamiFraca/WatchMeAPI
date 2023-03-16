@@ -33,6 +33,8 @@ namespace WatchMe
                          });
              builder.Services.AddMvc().AddMvcOptions(e => e.EnableEndpointRouting = false);
             var app = builder.Build();
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseCors("AllowSpecificOrigins");
             // Configure the HTTP request pipeline.
             using (var scope = app.Services.CreateScope())
