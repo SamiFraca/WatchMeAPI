@@ -69,14 +69,14 @@ namespace WatchMe.Controllers
             );
             if (user == null)
             {
-                return Unauthorized("Invalid email or password");
+                return Unauthorized("Invalid username or password");
             }
             var LoggedUser =  user;
             var authService = new AuthService(AuthService.KeyGen());
             var token = authService.AuthenticateUser(LoggedUser);
             if (token == null)
             {
-                return Unauthorized("Invalid email or password");
+                return Unauthorized("Invalid username or password");
             }
             return Ok(new { Token = token });
         }
