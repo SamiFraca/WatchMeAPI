@@ -72,7 +72,7 @@ namespace WatchMe.Controllers
                 return Unauthorized("Invalid email or password");
             }
             var LoggedUser =  user;
-            var authService = new AuthService("your-secret-key");
+            var authService = new AuthService(AuthService.KeyGen());
             var token = authService.AuthenticateUser(LoggedUser);
             if (token == null)
             {
