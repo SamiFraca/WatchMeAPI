@@ -61,7 +61,7 @@ namespace WatchMe.Controllers
         // }
         // // var token = await GetToken(user.Username, user.Role);
         // return user;
-        [HttpGet("auth/login")]
+        [HttpPost("auth/login")]
         public async Task<ActionResult<User>> LoginVerify(string name, string password)
         {
             var user = await _dbContext.Users.SingleOrDefaultAsync(
