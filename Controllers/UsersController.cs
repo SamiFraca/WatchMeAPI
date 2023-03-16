@@ -48,22 +48,37 @@ namespace WatchMe.Controllers
             return User;
         }
 
+        // if (_dbContext.Users == null)
+        // {
+        //     return NotFound();
+        // }
+        // var user = await _dbContext.Users.SingleOrDefaultAsync(
+        //     user => user.Username == name && user.Password == password
+        // );
+        // if (user == null)
+        // {
+        //     return NotFound();
+        // }
+        // // var token = await GetToken(user.Username, user.Role);
+        // return user;
         [HttpGet("auth/login")]
         public async Task<ActionResult<User>> LoginVerify(string name, string password)
         {
-            if (_dbContext.Users == null)
-            {
-                return NotFound();
-            }
             var user = await _dbContext.Users.SingleOrDefaultAsync(
-                user => user.Username == name && user.Password == password
+                e => e.Username == name && e.Password == password
             );
             if (user == null)
             {
-                return NotFound();
+                return Unauthorized("Invalid email or password");
             }
-            // var token = await GetToken(user.Username, user.Role);
-            return user;
+            var LoggedUser =  user;
+            var authService = new AuthService("your-secret-key");
+            var token = authService.AuthenticateUser(LoggedUser);
+            if (token == null)
+            {
+                return Unauthorized("Invalid email or password");
+            }
+            return Ok(new { Token = token });
         }
 
         [HttpPost]
