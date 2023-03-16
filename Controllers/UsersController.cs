@@ -14,9 +14,10 @@ namespace WatchMe.Controllers
         private readonly DataContext _dbContext;
         private readonly ILogger<UsersController> _logger;
 
-        public UsersController(DataContext dbContext)
+        public UsersController(DataContext dbContext, ILogger<UsersController> logger)
         {
             _dbContext = dbContext;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -62,23 +63,37 @@ namespace WatchMe.Controllers
         // // var token = await GetToken(user.Username, user.Role);
         // return user;
         [HttpPost("auth/login")]
-        public async Task<ActionResult<User>> LoginVerify(string name, string password)
+        public async Task<ActionResult<User>> LoginVerify(
+            string name,
+            string password,
+            [FromServices] AuthService authService
+        )
         {
-            var user = await _dbContext.Users.SingleOrDefaultAsync(
-                e => e.Username == name && e.Password == password
-            );
-            if (user == null)
+            try
             {
-                return Unauthorized("Invalid username or password");
+                var user = await _dbContext.Users.SingleOrDefaultAsync(
+                    e => e.Username == name && e.Password == password
+                );
+                if (user == null)
+                {
+                    return Unauthorized("Invalid username or password");
+                }
+                var LoggedUser = user;
+                var token = authService.AuthenticateUser(LoggedUser);
+                if (token == null)
+                {
+                    return Unauthorized("Invalid username or password");
+                }
+                return Ok(new { Token = token });
             }
-            var LoggedUser =  user;
-            var authService = new AuthService(AuthService.KeyGen());
-            var token = authService.AuthenticateUser(LoggedUser);
-            if (token == null)
+            catch (Exception ex)
             {
-                return Unauthorized("Invalid username or password");
+                _logger.LogError(ex, "An error occurred while verifying the login details.");
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    "An error occurred while attempting to login"
+                );
             }
-            return Ok(new { Token = token });
         }
 
         [HttpPost]
