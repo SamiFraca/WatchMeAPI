@@ -14,7 +14,10 @@ namespace WatchMe.Controllers
         private readonly DataContext _dbContext;
         private readonly ILogger<UsersController> _logger;
 
-        public UsersController(DataContext dbContext, ILogger<UsersController> logger)
+        public UsersController(
+            DataContext dbContext,
+            ILogger<UsersController> logger,
+        )
         {
             _dbContext = dbContext;
             _logger = logger;
@@ -65,8 +68,7 @@ namespace WatchMe.Controllers
         [HttpPost("auth/login")]
         public async Task<ActionResult<User>> LoginVerify(
             string name,
-            string password,
-            [FromServices] AuthService authService
+            string password
         )
         {
             try
@@ -79,6 +81,7 @@ namespace WatchMe.Controllers
                     return Unauthorized("Invalid username or password");
                 }
                 var LoggedUser = user;
+                var authService = HttpContext.RequestServices.GetService<AuthService>();
                 var token = authService.AuthenticateUser(LoggedUser);
                 if (token == null)
                 {

@@ -13,9 +13,9 @@ public class AuthService
         _jwtSecretKey = jwtSecretKey;
     }
 
-    public string AuthenticateUser(User user)
+    public  string AuthenticateUser(User user)
     {
-        // Verify the user's credentials and retrieve their identity
+    
 
         // Generate a JWT token with the user's identity as claims
         var tokenHandler = new JwtSecurityTokenHandler();
