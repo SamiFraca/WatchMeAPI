@@ -1,7 +1,6 @@
 using WatchMe.Data;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace WatchMe
 {
     public class Program
@@ -32,12 +31,12 @@ namespace WatchMe
                     }
                 );
             });
+            var jwtSecretKey = builder.Configuration.GetSection("AuthService").GetValue<string>("SecretKey");
+            builder.Services.AddSingleton(new AuthService(jwtSecretKey));
             builder.Services.AddMvc().AddMvcOptions(e => e.EnableEndpointRouting = false);
             var app = builder.Build();
             app.UseAuthentication();
 
-            var jwtSecretKey = builder.Configuration.GetValue<string>("SecretKey");
-            builder.Services.AddSingleton(new AuthService(jwtSecretKey));
             app.UseCors("AllowSpecificOrigins");
             // Configure the HTTP request pipeline.
             using (var scope = app.Services.CreateScope())
