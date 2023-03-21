@@ -16,7 +16,7 @@ namespace WatchMe.Controllers
 
         public UsersController(
             DataContext dbContext,
-            ILogger<UsersController> logger,
+            ILogger<UsersController> logger
         )
         {
             _dbContext = dbContext;
