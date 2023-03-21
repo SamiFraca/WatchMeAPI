@@ -64,11 +64,12 @@ namespace WatchMe.Controllers
 
             if (bars.Count == 0)
             {
-                return NotFound($"No bars found with location '{location}'");
+                return NotFound($"No bars found with location: '{location}'");
             }
             return Ok(bars);
         }
-        [HttpGet("name")]
+
+        [HttpGet("names")]
         public IActionResult SearchName(string name)
         {
             if (_dbContext.Bars == null)
@@ -82,8 +83,24 @@ namespace WatchMe.Controllers
 
             if (bars.Count == 0)
             {
-                return NotFound($"No bars found with name '{name}'");
+                return NotFound($"No bars found with name: '{name}'");
             }
+            return Ok(bars);
+        }
+
+        [HttpGet("shows/sports")]
+        public IActionResult SearchSport(string sport)
+        {
+            var bars = _dbContext.Bars
+                .Include(b => b.Shows)
+                .Where(b => b.Shows != null && b.Shows.Any(s => s.Sport.Contains(sport)))
+                .ToList();
+
+            if (bars.Count == 0)
+            {
+                return NotFound($"No bars found with the sport: '{sport}'");
+            }
+
             return Ok(bars);
         }
 
