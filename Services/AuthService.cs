@@ -41,18 +41,18 @@ public class AuthService
         return tokenString;
     }
 
-    public static string KeyGen()
-    {
-        string keygenString = "qwertyuiopasdfghjklzxcnvbm1234567890";
-        Random rnd = new Random();
-        string randomKey = "";
-        for (int i = 0; i < 15; i++)
-        {
-            int randomIndex = rnd.Next(keygenString.Length);
-            randomKey += keygenString[randomIndex];
-        }
-        return randomKey;
-    }
+    // public static string KeyGen()
+    // {
+    //     string keygenString = "qwertyuiopasdfghjklzxcnvbm1234567890";
+    //     Random rnd = new Random();
+    //     string randomKey = "";
+    //     for (int i = 0; i < 15; i++)
+    //     {
+    //         int randomIndex = rnd.Next(keygenString.Length);
+    //         randomKey += keygenString[randomIndex];
+    //     }
+    //     return randomKey;
+    // }
     // private LoginUser VerifyUser(string email, string password)
     // {
 
