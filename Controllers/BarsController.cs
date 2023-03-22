@@ -1,9 +1,8 @@
-using WatchMe.Models;
-using Microsoft.AspNetCore.Mvc;
-using WatchMe.Data;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
+using WatchMe.Models;
+using WatchMe.Services;
 
 namespace WatchMe.Controllers
 {
@@ -12,153 +11,69 @@ namespace WatchMe.Controllers
     [Route("[controller]")]
     public class BarsController : ControllerBase
     {
-        private readonly DataContext _dbContext;
-        private readonly ILogger<BarsController> _logger;
+        private readonly BarService _barService;
 
-        public BarsController(DataContext dbContext)
+        public BarsController(BarService barService)
         {
-            _dbContext = dbContext;
+            _barService = barService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Bar>>> GetBars()
+        public async Task<IActionResult> GetBarsAsync()
         {
-            if (_dbContext.Bars == null)
+            var bars = await _barService.GetBarsAsync();
+            if (bars == null)
             {
-                return NotFound();
+                return new NotFoundObjectResult(null);
             }
-            var bars = _dbContext.Bars
-                .Include(bar => bar.Shows)
-                //  .Where(bar => bar.)
-                .ToListAsync();
-            return await bars;
-            //    return await bars;
+            return new OkObjectResult(bars);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Bar>> GetBar(int id)
+        public async Task<IActionResult> GetBarAsync(int id)
         {
-            if (_dbContext.Bars == null)
+            var bar = await _barService.GetBarAsync(id);
+            if (bar == null)
             {
-                return NotFound();
+                return new NotFoundObjectResult(null);
             }
-            var Bar = await _dbContext.Bars.FindAsync(id);
-            if (Bar == null)
-            {
-                return NotFound();
-            }
-            return Bar;
+            return new OkObjectResult(bar);
         }
 
         [HttpGet("locations")]
-        public IActionResult SearchLocation(string location)
+        public async Task<IActionResult> SearchLocation(string location)
         {
-            if (_dbContext.Bars == null)
-            {
-                return NotFound();
-            }
-            var bars = _dbContext.Bars
-                .Where(b => b.Location.Contains(location))
-                .Include(b => b.Shows)
-                .ToList();
-
-            if (bars.Count == 0)
-            {
-                return NotFound($"No bars found with location: '{location}'");
-            }
-            return Ok(bars);
+            return await _barService.SearchLocation(location);
         }
 
         [HttpGet("names")]
-        public IActionResult SearchName(string name)
+        public async Task<IActionResult> SearchName(string name)
         {
-            if (_dbContext.Bars == null)
-            {
-                return NotFound();
-            }
-            var bars = _dbContext.Bars
-                .Where(b => b.Name.Contains(name))
-                .Include(b => b.Shows)
-                .ToList();
-
-            if (bars.Count == 0)
-            {
-                return NotFound($"No bars found with name: '{name}'");
-            }
-            return Ok(bars);
+            return await _barService.SearchName(name);
         }
 
         [HttpGet("shows/sports")]
-        public IActionResult SearchSport(string sport)
+        public async Task<IActionResult> SearchSport(string sport)
         {
-            var bars = _dbContext.Bars
-                .Include(b => b.Shows)
-                .Where(b => b.Shows != null && b.Shows.Any(s => s.Sport.Contains(sport)))
-                .ToList();
-
-            if (bars.Count == 0)
-            {
-                return NotFound($"No bars found with the sport: '{sport}'");
-            }
-
-            return Ok(bars);
+            return await _barService.SearchSport(sport);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Bar>> PostBar(Bar Bar)
+        public async Task<IActionResult> PostBarAsync(Bar bar)
         {
-            _dbContext.Bars.Add(Bar);
-            await _dbContext.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetBar), new { id = Bar.Id }, Bar);
+            return await _barService.PostBarAsync(bar);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBar(int id, Bar Bar)
+        public async Task<IActionResult> PutBarAsync(int id, Bar Bar)
         {
-            if (id != Bar.Id)
-            {
-                return BadRequest();
-            }
-            _dbContext.Entry(Bar).State = EntityState.Modified;
-            try
-            {
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!BarExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return NoContent();
-        }
-
-        private bool BarExists(long id)
-        {
-            return (_dbContext.Bars?.Any(e => e.Id == id)).GetValueOrDefault();
+            return await _barService.PutBarAsync(id, Bar);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBar(int id)
+        public async Task<IActionResult> DeleteBarAsync(int id)
         {
-            if (_dbContext.Bars is null)
-            {
-                return NotFound();
-            }
-
-            var Bar = await _dbContext.Bars.FindAsync(id);
-            if (Bar == null)
-            {
-                return NotFound();
-            }
-            _dbContext.Bars.Remove(Bar);
-            await _dbContext.SaveChangesAsync();
-            return NoContent();
+            return await _barService.DeleteBarAsync(id);
         }
     }
 }

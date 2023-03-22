@@ -1,6 +1,7 @@
 using WatchMe.Data;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.Extensions.DependencyInjection;
+using WatchMe.Services;
 namespace WatchMe
 {
     public class Program
@@ -17,6 +18,8 @@ namespace WatchMe
                 options =>
                     options.UseSqlServer(builder.Configuration.GetConnectionString("WatchMeDb"))
             );
+            builder.Services.AddScoped<BarService>();
+            builder.Services.AddScoped<UserService>();
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -31,7 +34,9 @@ namespace WatchMe
                     }
                 );
             });
-            var jwtSecretKey = builder.Configuration.GetSection("AuthService").GetValue<string>("SecretKey");
+            var jwtSecretKey = builder.Configuration
+                .GetSection("AuthService")
+                .GetValue<string>("SecretKey");
             builder.Services.AddSingleton(new AuthService(jwtSecretKey));
             builder.Services.AddMvc().AddMvcOptions(e => e.EnableEndpointRouting = false);
             var app = builder.Build();

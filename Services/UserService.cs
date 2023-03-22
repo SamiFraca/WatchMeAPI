@@ -1,76 +1,123 @@
-// using WatchMe.Models;
+using WatchMe.Models;
+using Microsoft.AspNetCore.Mvc;
+using WatchMe.Data;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Cors;
 
-// namespace WatchMe.Services
-// {
+namespace WatchMe.Services
+{
+    public class UserService
+    {
+        private readonly DataContext _dbContext;
+        private readonly ILogger<UserService> _logger;
 
-//     public static class UserService
-//     {
-//         static List<User> Users { get; }
-//         static int nextId = 3;
-//         static UserService()
-//         {
-//             Users = new List<User>
-//         {
-//             new User { Id = 1, Username = "Classic Italian", Password="12345", IsAdmin=true,
-//             MyBar = new Bar {
-//                 Id = 1, Name = "Classic sddddd", Location = "Zaragoza",Capacity = 50,
-//                  Show = new Show {
-//                     Title= "Francia - España (Eurocopa)", Start = new DateTime(2108, 3, 1, 7, 0, 0, DateTimeKind.Utc), End= new DateTime(2028, 3, 1, 7, 0, 0, DateTimeKind.Utc)
-//                     }
-//                   }
-//                  },
-//             new User { Id = 1, Username = "Veggie", Password="543533",  IsAdmin = false,
-//             MyBar = new Bar {  Id = 2, Name = "Classic Italian", Location = "Zaragoza",Capacity = 50,
-//             Show = new Show {
-//                 Title= "Test",Start = DateTime.Now, End= new DateTime(2010, 3, 1, 7, 0, 0, DateTimeKind.Utc)
-//                 }
-//               }
-//              }
-//         };
-//         }
+        public UserService(DataContext dbContext, ILogger<UserService> logger)
+        {
+            _dbContext = dbContext;
+            _logger = logger;
+        }
 
-//         public static List<User> GetAll() => Users;
+        public async Task<List<User>> GetUsers()
+        {
+            var users = await _dbContext.Users.Include(user => user.MyBar).ToListAsync();
 
-//         public static User? Get(int id) => Users.FirstOrDefault(p => p.Id == id);
+            return users;
+        }
 
-//         public static void Add(User User)
-//         {
-//             User.Id = nextId++;
-//             Users.Add(User);
-//         }
+        public async Task<User> GetUser(int id)
+        {
+            var user = await _dbContext.Users.FindAsync(id);
 
-//         public static void Delete(int id)
-//         {
-//             var User = Get(id);
-//             if (User is null)
-//                 return;
+            return user;
+        }
 
-//             Users.Remove(User);
-//         }
+        public async Task<ActionResult<User>> LoginVerify(string name, string password, AuthService authService)
+        {
+            try
+            {
+                var user = await _dbContext.Users.SingleOrDefaultAsync(
+                    e => e.Username == name && e.Password == password
+                );
+                if (user == null)
+                {
+                    return new NotFoundObjectResult("Invalid username or password");
+                }
+                var LoggedUser = user;
+                var token = authService.AuthenticateUser(LoggedUser);
+                if (token == null)
+                {
+                    return new UnauthorizedObjectResult("Invalid username or password");
+                }
+                return new OkObjectResult(new { Token = token });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while verifying the login details.");
+                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+            }
+        }
 
-//         public static void Update(User User)
-//         {
-//             var index = Users.FindIndex(p => p.Id == User.Id);
-//             if (index == -1)
-//                 return;
+        public async Task<User> PostUser(User User)
+        {
+            if (User.MyBar == null)
+            {
+                User.MyBar = new Bar
+                {
+                    Id = 0,
+                    Name = "Unknown",
+                    Location = "None",
+                    Capacity = 0,
+                    Shows = null
+                };
+            }
+            _dbContext.Users.Add(User);
+            await _dbContext.SaveChangesAsync();
 
-//             Users[index] = User;
-//         }
-//         // public static bool SearchUser(string User, string location)
-//         // {
-//         //     bool exists = false;
-//         //     foreach (var User in Users)
-//         //     {
-//         //         if (User.Username.ToLower().Equals(User.ToLower()) && User.location.ToLower().Equals(location.ToLower()))
-//         //         {
-//         //             exists = true;
-//         //         }
-//         //     }
-//         //     if (exists)
-//         //     {
-//         //         Console.WriteLine("Sorry, that User already exists in that location and is already registered with another account, please try again.");
-//         //     }
-//         //     return exists;
-//         // }
-//     }
-// }
+            return User;
+        }
+
+        public async Task<IActionResult> PutUser(int id, User User)
+        {
+            if (id != User.Id)
+            {
+                return new BadRequestObjectResult(null);
+            }
+            _dbContext.Entry(User).State = EntityState.Modified;
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserExists(id))
+                {
+                    return new NotFoundObjectResult($"No user found with '{User.Username}' name.");
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return new NoContentResult();
+        }
+
+        private bool UserExists(long id)
+        {
+            return (_dbContext.Users?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var User = await _dbContext.Users.FindAsync(id);
+            if (User == null)
+            {
+                return new NotFoundObjectResult(null);
+            }
+            _dbContext.Users.Remove(User);
+            await _dbContext.SaveChangesAsync();
+
+            return new ContentResult();
+        }
+    }
+}
