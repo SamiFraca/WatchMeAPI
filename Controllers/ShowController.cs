@@ -1,74 +1,62 @@
-using WatchMe.Models;
-using Microsoft.AspNetCore.Mvc;
-using WatchMe.Data;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WatchMe.Data;
+using WatchMe.Models;
+using WatchMe.Services;
 
 namespace WatchMe.Controllers
 {
-
     [ApiController]
     [Route("[controller]")]
     public class ShowsController : ControllerBase
     {
-        private readonly DataContext _dbContext;
-        private readonly ILogger<ShowsController> _logger;
-        public ShowsController(DataContext dbContext)
+        private readonly ShowsService _showsService;
+
+        public ShowsController(DataContext context)
         {
-            _dbContext = dbContext;
+            _showsService = new ShowsService(context);
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Show>>> GetShows()
+        public async Task<ActionResult<IEnumerable<Show>>> GetShows()
         {
-            if (_dbContext.Shows == null)
-            {
-                return NotFound();
-            }
-            return await _dbContext.Shows.ToListAsync();
+            var shows = await _showsService.GetShows();
+            return Ok(shows);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Show>> GetShow(int id)
+        public async Task<ActionResult<Show>> GetShow([FromRoute] int id)
         {
-            if (_dbContext.Shows == null)
-            {
-                return NotFound();
-            }
-            var Show = await _dbContext.Shows.FindAsync(id);
-            if (Show == null)
-            {
-                return NotFound();
-            }
-            return Show;
+            var show = await _showsService.GetShow(id);
+            return Ok(show);
         }
+
         [HttpPost]
-        public async Task<ActionResult<Show>> PostShow(Show Show)
+        public async Task<ActionResult<Show>> PostShow([FromBody] Show show)
         {
-            if (Show.BarId != 0 || Show.BarId != null)
-            {
-                _dbContext.Shows.Add(Show);
-                await _dbContext.SaveChangesAsync();
-                return CreatedAtAction(nameof(GetShow), new { id = Show.Id }, Show);
-            }
-            return BadRequest();
+            var newShow = await _showsService.PostShow(show);
+            return CreatedAtAction(nameof(GetShow), new { id = newShow.Id }, newShow);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutShow(int id, Show Show)
+        public async Task<ActionResult<Show>> PutShow([FromRoute] int id, [FromBody] Show show)
         {
-            if (id != Show.Id)
+            if (id != show.Id)
             {
                 return BadRequest();
             }
-            _dbContext.Entry(Show).State = EntityState.Modified;
+
             try
             {
-                await _dbContext.SaveChangesAsync();
+                var result = await _showsService.PutShow(id, show);
+                return Ok(result);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ShowExists(id))
+                if (!_showsService.ShowExists(id))
                 {
                     return NotFound();
                 }
@@ -77,30 +65,13 @@ namespace WatchMe.Controllers
                     throw;
                 }
             }
-            return NoContent();
-        }
-
-        private bool ShowExists(long id)
-        {
-            return (_dbContext.Shows?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteShow(int id)
+        public async Task<ActionResult<bool>> DeleteShow(int id)
         {
-            if (_dbContext.Shows is null)
-            {
-                return NotFound();
-            }
-
-            var Show = await _dbContext.Shows.FindAsync(id);
-            if (Show == null)
-            {
-                return NotFound();
-            }
-            _dbContext.Shows.Remove(Show);
-            await _dbContext.SaveChangesAsync();
-            return NoContent();
+            var result = await _showsService.DeleteShow(id);
+            return Ok(result);
         }
     }
 }
