@@ -4,30 +4,32 @@ using WatchMe.Data;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Cors;
+using WatchMe.Repositories;
 
 namespace WatchMe.Services
 {
     public class UserService
-    {
+    {private readonly UserRepository _userRepository;
         private readonly DataContext _dbContext;
         private readonly ILogger<UserService> _logger;
 
-        public UserService(DataContext dbContext, ILogger<UserService> logger)
+        public UserService(DataContext dbContext, ILogger<UserService> logger, UserRepository userRepository)
         {
             _dbContext = dbContext;
             _logger = logger;
+            _userRepository = userRepository;
         }
 
         public async Task<List<User>> GetUsers()
         {
-            var users = await _dbContext.Users.Include(user => user.MyBar).ToListAsync();
+            var users = await _userRepository.GetUsers();
 
             return users;
         }
 
         public async Task<User> GetUser(int id)
         {
-            var user = await _dbContext.Users.FindAsync(id);
+              var user = await _userRepository.GetUser(id);
 
             return user;
         }
@@ -71,10 +73,8 @@ namespace WatchMe.Services
                     Shows = null
                 };
             }
-            _dbContext.Users.Add(User);
-            await _dbContext.SaveChangesAsync();
-
-            return User;
+            var user = await _userRepository.PostUser(User);
+            return user;
         }
 
         public async Task<IActionResult> PutUser(int id, User User)
@@ -109,15 +109,13 @@ namespace WatchMe.Services
 
         public async Task<IActionResult> DeleteUser(int id)
         {
-            var User = await _dbContext.Users.FindAsync(id);
+            var User = await _userRepository.GetUser(id);
             if (User == null)
             {
                 return new NotFoundObjectResult(null);
             }
-            _dbContext.Users.Remove(User);
-            await _dbContext.SaveChangesAsync();
-
-            return new ContentResult();
+         var result = await _userRepository.DeleteUser(User);
+         return result;
         }
     }
 }

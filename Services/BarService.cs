@@ -4,6 +4,7 @@ using WatchMe.Data;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Cors;
+using WatchMe.Repositories;
 
 namespace WatchMe.Services
 {
@@ -11,23 +12,23 @@ namespace WatchMe.Services
     {
         private readonly DataContext _dbContext;
         private readonly ILogger<BarService> _logger;
+        private readonly BarRepository _barRepository;
 
-        public BarService(DataContext dbContext, ILogger<BarService> logger)
+        public BarService(DataContext dbContext, ILogger<BarService> logger, BarRepository barRepository)
         {
             _dbContext = dbContext;
             _logger = logger;
+            _barRepository = barRepository;
         }
 
         public async Task<List<Bar>> GetBarsAsync()
         {
-            return await _dbContext.Bars.Include(bar => bar.Shows).ToListAsync();
+            return await _barRepository.GetBars();
         }
 
         public async Task<Bar> GetBarAsync(int id)
         {
-            return await _dbContext.Bars
-                .Include(bar => bar.Shows)
-                .FirstOrDefaultAsync(bar => bar.Id == id);
+        return await _barRepository.GetBar(id);
         }
 
         public async Task<IActionResult> SearchLocation(string location)
@@ -75,8 +76,7 @@ namespace WatchMe.Services
 
         public async Task<IActionResult> PostBarAsync(Bar bar)
         {
-            _dbContext.Bars.Add(bar);
-            await _dbContext.SaveChangesAsync();
+            await _barRepository.PostBar(bar);
             return new CreatedAtActionResult(nameof(GetBarAsync), "Bars", new { id = bar.Id }, bar);
         }
 
@@ -117,9 +117,7 @@ namespace WatchMe.Services
             {
                 return new NotFoundObjectResult(null);
             }
-            _dbContext.Bars.Remove(Bar);
-            await _dbContext.SaveChangesAsync();
-            return new NoContentResult();
+            return await _barRepository.DeleteBar(Bar);
         }
     }
 }
