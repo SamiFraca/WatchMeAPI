@@ -2,48 +2,46 @@ using WatchMe.Models;
 using WatchMe.Data;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using WatchMe.Repositories;
 
 namespace WatchMe.Services
 {
     public class ShowsService
     {
+        private readonly ShowsRepository _showRepository;
         private readonly DataContext _dbContext;
 
-        public ShowsService(DataContext dbContext)
+        public ShowsService(ShowsRepository showRepository, DataContext dbContext)
         {
+            _showRepository = showRepository;
             _dbContext = dbContext;
         }
 
         public async Task<List<Show>> GetShows()
         {
-            if (_dbContext.Shows == null)
+            List<Show> shows = await _showRepository.GetShows();
+            if (shows == null)
             {
                 throw new Exception("Shows not found");
             }
-            return await _dbContext.Shows.ToListAsync();
+            return shows;
         }
 
         public async Task<Show> GetShow(int id)
         {
-            if (_dbContext.Shows == null)
-            {
-                throw new Exception("Shows not found");
-            }
-            var Show = await _dbContext.Shows.FindAsync(id);
-            if (Show == null)
+            var show = await _showRepository.GetShow(id);
+            if (show == null)
             {
                 throw new Exception("Show not found");
             }
-            return Show;
+            return show;
         }
 
         public async Task<Show> PostShow(Show show)
         {
             if (show.BarId != 0 || show.BarId != null)
             {
-                _dbContext.Shows.Add(show);
-                await _dbContext.SaveChangesAsync();
-                return show;
+                return await _showRepository.PostShow(show);
             }
             throw new Exception("Invalid show data");
         }
@@ -80,19 +78,12 @@ namespace WatchMe.Services
 
         public async Task<bool> DeleteShow(int id)
         {
-            if (_dbContext.Shows is null)
-            {
-                throw new Exception("Shows not found");
-            }
-
-            var Show = await _dbContext.Shows.FindAsync(id);
+            var Show = await _showRepository.GetShow(id);
             if (Show == null)
             {
                 throw new Exception("Show not found");
             }
-            _dbContext.Shows.Remove(Show);
-            await _dbContext.SaveChangesAsync();
-            return true;
+            return await _showRepository.DeleteShow(Show);
         }
     }
 }

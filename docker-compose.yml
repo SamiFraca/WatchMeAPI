@@ -10,6 +10,8 @@ services:
           - "8080:80"
         depends_on:
           - sqlserver
+        Volumes:
+          - ./logs:/app/logs
 
     sqlserver:
         environment:
@@ -19,4 +21,5 @@ services:
         ports:
             - '6126:1433'
         image: mcr.microsoft.com/mssql/server:2022-latest
+    
 
