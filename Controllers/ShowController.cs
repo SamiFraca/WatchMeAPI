@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using WatchMe.Data;
 using WatchMe.Models;
 using WatchMe.Services;
+using WatchMe.Repositories;
 
 namespace WatchMe.Controllers
 {
@@ -14,17 +15,18 @@ namespace WatchMe.Controllers
     public class ShowsController : ControllerBase
     {
         private readonly ShowsService _showsService;
-
-        public ShowsController(DataContext context)
+        private readonly BarService _barService;
+        public ShowsController(ShowsService showService, BarService barService)
         {
-            _showsService = new ShowsService(context);
+            _showsService = showService;
+            _barService = barService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Show>>> GetShows()
         {
             var shows = await _showsService.GetShows();
-            return Ok(shows);
+            return new OkObjectResult(shows);
         }
 
         [HttpGet("{id}")]
@@ -37,6 +39,11 @@ namespace WatchMe.Controllers
         [HttpPost]
         public async Task<ActionResult<Show>> PostShow([FromBody] Show show)
         {
+            var existingBar = await _barService.GetBarAsync(show.BarId);
+            if (existingBar == null)
+            {
+                return NotFound("The specified bar does not exist");
+            }
             var newShow = await _showsService.PostShow(show);
             return CreatedAtAction(nameof(GetShow), new { id = newShow.Id }, newShow);
         }

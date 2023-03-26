@@ -23,6 +23,8 @@ namespace WatchMe
             builder.Services.AddScoped<UserService>();
             builder.Services.AddScoped<UserRepository>();
             builder.Services.AddScoped<BarRepository>();
+            builder.Services.AddScoped<ShowsRepository>();
+            builder.Services.AddScoped<ShowsService>();
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

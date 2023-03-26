@@ -6,10 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Cors;
 namespace WatchMe.Repositories
 {
-    interface IUserRepository
-    {
-        public List<User> GetUsers();
-    }
+ 
     public class UserRepository 
     {
           private readonly DataContext _dbContext;
