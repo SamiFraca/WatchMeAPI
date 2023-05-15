@@ -26,7 +26,8 @@ public class AuthService
                 new Claim[]
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Name, user.Username)
+                    new Claim(ClaimTypes.Name, user.Username),
+                    new Claim(ClaimTypes.AuthorizationDecision, user.IsAdmin.ToString())
                 }
             ),
             Expires = DateTime.UtcNow.AddHours(1),
