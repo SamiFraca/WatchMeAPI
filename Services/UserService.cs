@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Cors;
 using WatchMe.Repositories;
+using Microsoft.AspNetCore.Http;
 
 namespace WatchMe.Services
 {
@@ -34,31 +35,38 @@ namespace WatchMe.Services
             return user;
         }
 
-        public async Task<ActionResult<User>> LoginVerify(string name, string password, AuthService authService)
+public async Task<ActionResult<User>> LoginVerify(string name, string password, AuthService authService, HttpContext httpContext)
+{
+    try
+    {
+        var user = await _dbContext.Users.SingleOrDefaultAsync(
+            e => e.Username == name && e.Password == password
+        );
+        if (user == null)
         {
-            try
-            {
-                var user = await _dbContext.Users.SingleOrDefaultAsync(
-                    e => e.Username == name && e.Password == password
-                );
-                if (user == null)
-                {
-                    return new NotFoundObjectResult("Invalid username or password");
-                }
-                var LoggedUser = user;
-                var token = authService.AuthenticateUser(LoggedUser);
-                if (token == null)
-                {
-                    return new UnauthorizedObjectResult("Invalid username or password");
-                }
-                return new OkObjectResult(new { Token = token });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while verifying the login details.");
-                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
-            }
+            return new NotFoundObjectResult("Invalid username or password");
         }
+        var LoggedUser = user;
+        var token = authService.AuthenticateUser(LoggedUser);
+        if (token == null)
+        {
+            return new UnauthorizedObjectResult("Invalid username or password");
+        }
+
+       // Send token through HttpOnly cookie
+        httpContext.Response.Cookies.Append("Authorization", token, new CookieOptions
+         {
+            HttpOnly = true
+         });
+
+        return new OkObjectResult(new { Token = token });
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError(ex, "An error occurred while verifying the login details.");
+        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+    }
+}
 
         public async Task<User> PostUser(User User)
         {
