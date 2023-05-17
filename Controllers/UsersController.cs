@@ -53,7 +53,7 @@ namespace WatchMe.Controllers
         public async Task<ActionResult<User>> LoginVerify(string name, string password)
         {
             var authService = HttpContext.RequestServices.GetService<AuthService>();
-            return await _userService.LoginVerify(name, password, authService);
+            return await _userService.LoginVerify(name, password, authService, HttpContext);
         }
 
         [HttpPost]
