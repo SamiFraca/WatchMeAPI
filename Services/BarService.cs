@@ -117,6 +117,14 @@ namespace WatchMe.Services
             {
                 return new NotFoundObjectResult(null);
             }
+            var users = _dbContext.Users.Where(u => u.MyBar.Id == Bar.Id);
+            if(users != null){
+              foreach (var user in users)
+              {
+               user.MyBar = null;
+              }
+            }
+
             return await _barRepository.DeleteBar(Bar);
         }
     }
