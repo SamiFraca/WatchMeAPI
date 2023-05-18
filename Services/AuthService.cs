@@ -13,10 +13,8 @@ public class AuthService
         _jwtSecretKey = jwtSecretKey;
     }
 
-    public  string AuthenticateUser(User user)
+    public string AuthenticateUser(User user)
     {
-    
-
         // Generate a JWT token with the user's identity as claims
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_jwtSecretKey);
@@ -40,6 +38,21 @@ public class AuthService
         var tokenString = tokenHandler.WriteToken(token);
 
         return tokenString;
+    }
+
+    public Boolean DecodeAndValidateToken(string tokenString, int id)
+    {
+        var stream = tokenString;
+        var handler = new JwtSecurityTokenHandler();
+        var jsonToken = handler.ReadToken(stream);
+        var tokenS = jsonToken as JwtSecurityToken;
+        // Decode the token string into a JwtSecurityToken object
+        var jti = tokenS.Claims.First(claim => claim.Type == "nameid").Value;
+        if (id.ToString() != jti)
+        {
+            return false;
+        }
+        return true;
     }
 
     // public static string KeyGen()
