@@ -33,10 +33,25 @@ namespace WatchMe.Controllers
             return new OkObjectResult(users);
         }
 
+        //  [HttpGet("{id}")]
+        //         public async Task<ActionResult<User>> GetUser(int id)
+        //         {
+        //             var user = await _userService.GetUser(id);
+        //             if (user == null)
+        //             {
+        //                 return new NotFoundObjectResult(null);
+        //             }
+        //             return new OkObjectResult(user);
+        //             var User = await _dbContext.Users.FindAsync(id);
+        //             if (User == null)
+        //             {
+        //                 return NotFound();
+        //             }
+        //         }
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(int id)
+        public async Task<ActionResult<User>> GetUser(int id, string token)
         {
-            var user = await _userService.GetUser(id);
+            var user = await _userService.GetUser(id, token);
             if (user == null)
             {
                 return new NotFoundObjectResult(null);
@@ -53,7 +68,7 @@ namespace WatchMe.Controllers
         public async Task<ActionResult<User>> LoginVerify(string name, string password)
         {
             var authService = HttpContext.RequestServices.GetService<AuthService>();
-            return await _userService.LoginVerify(name, password, authService, HttpContext);
+            return await _userService.LoginVerify(name, password, authService, HttpContext);
         }
 
         [HttpPost]
