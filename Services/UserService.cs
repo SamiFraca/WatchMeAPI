@@ -8,6 +8,7 @@ using WatchMe.Repositories;
 using Microsoft.AspNetCore.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
+using WatchMe.DTOs;
 
 namespace WatchMe.Services
 {
@@ -16,16 +17,20 @@ namespace WatchMe.Services
         private readonly UserRepository _userRepository;
         private readonly DataContext _dbContext;
         private readonly ILogger<UserService> _logger;
+        
+        private readonly UserDTO _userDTO;
 
         public UserService(
             DataContext dbContext,
             ILogger<UserService> logger,
-            UserRepository userRepository
+            UserRepository userRepository,
+            UserDTO userDTO
         )
         {
             _dbContext = dbContext;
             _logger = logger;
             _userRepository = userRepository;
+            _userDTO = userDTO;
         }
 
         public async Task<List<User>> GetUsers()
@@ -43,11 +48,12 @@ namespace WatchMe.Services
         //         }
         public async Task<User> GetUser(int id, string token)
         {
+           var userDto = _userDTO.GetUserDTO(id);
             var authService = new AuthService(
                 "6gNvZ8x#G^2Hc%*UqL@f!y3sTm$9RzJkE4jKpWdVb7w&-oI+a1u5iQeXt0"
             );
 
-            if (!authService.DecodeAndValidateToken(token, id))
+            if (!authService.DecodeAndValidateToken(token, id,userDto ))
             {
                 throw new UnauthorizedAccessException("Invalid token");
             }
@@ -61,6 +67,11 @@ namespace WatchMe.Services
             var response = await client.GetAsync(
                 $"https://watchmeapi-test.azurewebsites.net/Users/{id}"
             );
+             if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Failed to retrieve user with id {id}. Error: {response.StatusCode}");
+            }
+
             var content = await response.Content.ReadAsStringAsync();
 
             var user = JsonConvert.DeserializeObject<User>(content);
