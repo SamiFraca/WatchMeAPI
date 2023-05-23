@@ -18,7 +18,7 @@ namespace WatchMe.DTOs
         {
             _dbContext = dbContext;
         }
-
+        [HttpGet("{id}")]
         public UserDto GetUserDTO(int id)
         {
             var user = _dbContext.Users.FirstOrDefault(u => u.Id == id);
