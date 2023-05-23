@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using WatchMe.Services;
 using Microsoft.AspNetCore.Authorization;
-
+using Microsoft.AspNetCore.Cors;
 namespace WatchMe.Controllers
 {
     [ApiController]
@@ -49,6 +49,7 @@ namespace WatchMe.Controllers
         //                 return NotFound();
         //             }
         //        }
+        [EnableCors("AllowAllOrigins")]
         [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUser(
