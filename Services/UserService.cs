@@ -57,24 +57,8 @@ namespace WatchMe.Services
             {
                 throw new UnauthorizedAccessException("Invalid token");
             }
-
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                token
-            );
-
-            var response = await client.GetAsync(
-                $"https://watchmeapi-test.azurewebsites.net/Users/{id}"
-            );
-             if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception($"Failed to retrieve user with id {id}. Error: {response.StatusCode}");
-            }
-
-            var content = await response.Content.ReadAsStringAsync();
-
-            var user = JsonConvert.DeserializeObject<User>(content);
+            
+            var user = await _userRepository.GetUser(id);
             return user;
         }
 
