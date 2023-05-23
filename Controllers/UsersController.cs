@@ -4,6 +4,7 @@ using WatchMe.Data;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using WatchMe.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WatchMe.Controllers
 {
@@ -47,21 +48,30 @@ namespace WatchMe.Controllers
         //             {
         //                 return NotFound();
         //             }
-        //         }
+        //        }
+        [Authorize]
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(int id, string token)
+        public async Task<IActionResult> GetUser(
+            int userId,
+            [FromHeader(Name = "Authorization")] string authorization
+        )
         {
-            var user = await _userService.GetUser(id, token);
-            if (user == null)
+            try
             {
-                return new NotFoundObjectResult(null);
+                var tokenValue = authorization.Split(" ")[1];
+                var user = await _userService.GetUser(userId, tokenValue);
+                return Ok(user);
             }
-            return new OkObjectResult(user);
-            // var User = await _dbContext.Users.FindAsync(id);
-            // if (User == null)
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+            //   var user = await _userService.GetUser(id, token);
+            // if (user == null)
             // {
-            //     return NotFound();
+            //     return new NotFoundObjectResult(null);
             // }
+            // return new OkObjectResult(user);
         }
 
         [HttpPost("auth/login")]
