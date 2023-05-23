@@ -49,32 +49,21 @@ namespace WatchMe.Controllers
         //                 return NotFound();
         //             }
         //        }
-        [EnableCors("AllowAllOrigins")]
-        [Authorize]
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetUser(
-            int userId,
-            [FromHeader(Name = "Authorization")] string authorization
-        )
+    [HttpGet("{id}")]
+        public async Task<ActionResult<User>> GetUser(int id, string token)
         {
-            try
+            var user = await _userService.GetUser(id, token);
+            if (user == null)
             {
-                var tokenValue = authorization.Split(" ")[1];
-                var user = await _userService.GetUser(userId, tokenValue);
-                return Ok(user);
+                return new NotFoundObjectResult(null);
             }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-            //   var user = await _userService.GetUser(id, token);
-            // if (user == null)
+            return new OkObjectResult(user);
+            // var User = await _dbContext.Users.FindAsync(id);
+            // if (User == null)
             // {
-            //     return new NotFoundObjectResult(null);
+            //     return NotFound();
             // }
-            // return new OkObjectResult(user);
         }
-
         [HttpPost("auth/login")]
         public async Task<ActionResult<User>> LoginVerify(string name, string password)
         {
