@@ -14,7 +14,11 @@ namespace WatchMe.Services
         private readonly ILogger<BarService> _logger;
         private readonly BarRepository _barRepository;
 
-        public BarService(DataContext dbContext, ILogger<BarService> logger, BarRepository barRepository)
+        public BarService(
+            DataContext dbContext,
+            ILogger<BarService> logger,
+            BarRepository barRepository
+        )
         {
             _dbContext = dbContext;
             _logger = logger;
@@ -28,7 +32,7 @@ namespace WatchMe.Services
 
         public async Task<Bar> GetBarAsync(int id)
         {
-        return await _barRepository.GetBar(id);
+            return await _barRepository.GetBar(id);
         }
 
         public async Task<IActionResult> SearchLocation(string location)
@@ -117,14 +121,18 @@ namespace WatchMe.Services
             {
                 return new NotFoundObjectResult(null);
             }
-            var users = _dbContext.Users.Where(u => u.MyBar.Id == Bar.Id);
-            if(users != null){
-              foreach (var user in users)
-              {
-               user.MyBar = null;
-              }
+            var users = _dbContext.Users.Where(u => u.MyBars.Any(b => b.Id == Bar.Id));
+            if (users != null)
+            {
+                foreach (var user in users)
+                {
+                    var barToDelete = user.MyBars.FirstOrDefault(b => b.Id == Bar.Id);
+                    if (barToDelete != null)
+                    {
+                        user.MyBars.Remove(barToDelete);
+                    }
+                }
             }
-
             return await _barRepository.DeleteBar(Bar);
         }
     }

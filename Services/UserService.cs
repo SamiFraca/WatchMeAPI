@@ -103,16 +103,10 @@ namespace WatchMe.Services
 
         public async Task<User> PostUser(User User)
         {
-            if (User.MyBar == null)
+            if (User.MyBars == null)
             {
-                User.MyBar = new Bar
-                {
-                    Id = 0,
-                    Name = "Unknown",
-                    Location = "None",
-                    Capacity = 0,
-                    Shows = null
-                };
+                User.MyBars = new List<Bar>();
+
             }
             var user = await _userRepository.PostUser(User);
             return user;
