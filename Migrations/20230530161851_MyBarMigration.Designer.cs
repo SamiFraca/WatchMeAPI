@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WatchMe.Data;
 
@@ -11,9 +12,11 @@ using WatchMe.Data;
 namespace WatchMe.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230530161851_MyBarMigration")]
+    partial class MyBarMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,12 +47,7 @@ namespace WatchMe.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Bars");
                 });
@@ -97,6 +95,9 @@ namespace WatchMe.Migrations
                     b.Property<bool>("IsAdmin")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("MyBarId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -107,14 +108,9 @@ namespace WatchMe.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
-                });
+                    b.HasIndex("MyBarId");
 
-            modelBuilder.Entity("WatchMe.Models.Bar", b =>
-                {
-                    b.HasOne("WatchMe.Models.User", null)
-                        .WithMany("MyBars")
-                        .HasForeignKey("UserId");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("WatchMe.Models.Show", b =>
@@ -126,14 +122,18 @@ namespace WatchMe.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("WatchMe.Models.User", b =>
+                {
+                    b.HasOne("WatchMe.Models.Bar", "MyBar")
+                        .WithMany()
+                        .HasForeignKey("MyBarId");
+
+                    b.Navigation("MyBar");
+                });
+
             modelBuilder.Entity("WatchMe.Models.Bar", b =>
                 {
                     b.Navigation("Shows");
-                });
-
-            modelBuilder.Entity("WatchMe.Models.User", b =>
-                {
-                    b.Navigation("MyBars");
                 });
 #pragma warning restore 612, 618
         }

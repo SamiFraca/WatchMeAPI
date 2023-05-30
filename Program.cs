@@ -56,7 +56,7 @@ namespace WatchMe
             {
                 var dataContext = scope.ServiceProvider.GetRequiredService<DataContext>();
                 dataContext.Database.EnsureCreated();
-                dataContext.Seed();
+                // dataContext.Seed();
             }
 
             // app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());

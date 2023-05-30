@@ -18,14 +18,14 @@ namespace WatchMe.Repositories
 
         public async Task<List<User>> GetUsers()
         {
-            var users = await _dbContext.Users.Include(user => user.MyBar).ToListAsync();
+            var users = await _dbContext.Users.ToListAsync();
             return users;
         }
 
         public async Task<User> GetUser(int id)
         {
             var user = await _dbContext.Users
-                .Include(u => u.MyBar)
+                .Include(u => u.MyBars)
                 .ThenInclude(bar => bar.Shows)
                 .FirstOrDefaultAsync(u => u.Id == id);
 
