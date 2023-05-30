@@ -8,5 +8,6 @@ namespace WatchMe.Models
         public int Capacity { get; set; }
         public ICollection<Show>? Shows { get; set; }
         public string? Description { get; set; }
+        public int UserId{get;set;}
     }
 }
