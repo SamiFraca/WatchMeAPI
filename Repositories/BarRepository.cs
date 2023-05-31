@@ -21,17 +21,17 @@ namespace WatchMe.Repositories
                         var Bars = await _dbContext.Bars.Include(Bar => Bar.Shows).ToListAsync();
                         return Bars;
           }
+          
           public async Task<Bar> GetBar(int id ){
                 return await _dbContext.Bars
                 .Include(bar => bar.Shows)
                 .FirstOrDefaultAsync(bar => bar.Id == id);
           }
-        //   public async Task<ActionResult<Bar>> LoginVerify(string name, string password){
-        //     var Bar = await _dbContext.Bars.SingleOrDefaultAsync(
-        //             e => e.Barname == name && e.Password == password
-        //         );
-        //         return Bar;
-        //   }
+           public async Task<List<Bar>> GetBarUser(int id ){
+            var UserBars =await _dbContext.Bars
+                .Where(bar => bar.UserId == id).Include(bar => bar.Shows).ToListAsync();
+                return UserBars;
+          }
          public async Task<Bar> PostBar(Bar Bar){
             _dbContext.Bars.Add(Bar);
             await _dbContext.SaveChangesAsync();
