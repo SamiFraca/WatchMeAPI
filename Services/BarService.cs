@@ -35,6 +35,11 @@ namespace WatchMe.Services
             return await _barRepository.GetBar(id);
         }
 
+        public async Task<List<Bar>>  GetBarsFromUser(int id)
+        {
+            return await _barRepository.GetBarUser(id);
+        }
+
         public async Task<IActionResult> SearchLocation(string location)
         {
             var bars = await _dbContext.Bars

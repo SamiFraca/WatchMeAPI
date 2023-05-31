@@ -29,6 +29,17 @@ namespace WatchMe.Controllers
             return new OkObjectResult(bars);
         }
 
+        [HttpGet("User")]
+        public async Task<IActionResult> GetBarsFromUser(int UserId)
+        {
+            var barsUser = await _barService.GetBarsFromUser(UserId);
+            if (barsUser == null)
+            {
+                return new NotFoundObjectResult(null);
+            }
+            return new OkObjectResult(barsUser);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBarAsync(int id)
         {
