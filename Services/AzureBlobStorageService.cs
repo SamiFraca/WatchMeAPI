@@ -3,17 +3,17 @@ using Azure.Storage.Blobs.Models;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using System.Threading.Tasks;
-
 public class AzureBlobStorageService
 {
     private readonly BlobServiceClient _blobServiceClient;
     private readonly string _containerName;
+    private readonly string _connectionString;
 
     public AzureBlobStorageService(IConfiguration configuration)
     {
-        string connectionString = configuration.GetConnectionString("AzureBlobStorage:ConnectionString");
+         _connectionString = configuration["AzureBlobStorage:ConnectionString"];
         _containerName = configuration["AzureBlobStorage:ContainerName"];
-        _blobServiceClient = new BlobServiceClient(connectionString);
+        _blobServiceClient = new BlobServiceClient(_connectionString);
     }
 
     public async Task<string> UploadImageAsync(string fileName, Stream imageStream)
