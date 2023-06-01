@@ -70,9 +70,10 @@ namespace WatchMe.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostBarAsync(Bar bar)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> PostBarAsync(IFormFile? imageFile, Bar bar)
         {
-            return await _barService.PostBarAsync(bar);
+            return await _barService.PostBarAsync(bar, imageFile);
         }
 
         [HttpPut("{id}")]

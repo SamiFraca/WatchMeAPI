@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Cors;
 using WatchMe.Repositories;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace WatchMe.Services
 {
@@ -13,16 +16,19 @@ namespace WatchMe.Services
         private readonly DataContext _dbContext;
         private readonly ILogger<BarService> _logger;
         private readonly BarRepository _barRepository;
+        private readonly AzureBlobStorageService _blobStorageService;
 
         public BarService(
             DataContext dbContext,
             ILogger<BarService> logger,
-            BarRepository barRepository
+            BarRepository barRepository,
+            AzureBlobStorageService blobStorageService
         )
         {
             _dbContext = dbContext;
             _logger = logger;
             _barRepository = barRepository;
+            _blobStorageService = blobStorageService;
         }
 
         public async Task<List<Bar>> GetBarsAsync()
@@ -35,7 +41,7 @@ namespace WatchMe.Services
             return await _barRepository.GetBar(id);
         }
 
-        public async Task<List<Bar>>  GetBarsFromUser(int id)
+        public async Task<List<Bar>> GetBarsFromUser(int id)
         {
             return await _barRepository.GetBarUser(id);
         }
@@ -83,8 +89,24 @@ namespace WatchMe.Services
             return new OkObjectResult(bars);
         }
 
-        public async Task<IActionResult> PostBarAsync(Bar bar)
+        public async Task<IActionResult> PostBarAsync(Bar bar, IFormFile imageFile)
         {
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                using (Stream stream = imageFile.OpenReadStream())
+                {
+                    string fileName = imageFile.FileName;
+                    string imageUrl = await _blobStorageService.UploadImageAsync(fileName, stream);
+                    bar.ImageUrl = imageUrl;
+                }
+            }
+            if (bar.Shows != null)
+            {
+                foreach (var show in bar.Shows)
+                {
+                    show.BarId = bar.Id;
+                }
+            }
             await _barRepository.PostBar(bar);
             return new CreatedAtActionResult(nameof(GetBarAsync), "Bars", new { id = bar.Id }, bar);
         }
