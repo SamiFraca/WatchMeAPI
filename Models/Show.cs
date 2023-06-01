@@ -31,5 +31,7 @@ namespace WatchMe.Models
         }
         public int BarId { get; set; }
         public string Sport { get; set; }
+        public int maxCap { get; set; }
+        public int actualCap { get; set; }
     }
 }
