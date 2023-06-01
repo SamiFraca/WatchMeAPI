@@ -27,6 +27,7 @@ namespace WatchMe
             builder.Services.AddScoped<ShowsRepository>();
             builder.Services.AddScoped<ShowsService>();
             builder.Services.AddScoped<UserDTO>();
+            builder.Services.AddScoped<AzureBlobStorageService>();
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -45,6 +46,7 @@ namespace WatchMe
                 .GetSection("AuthService")
                 .GetValue<string>("SecretKey");
             builder.Services.AddSingleton(new AuthService(jwtSecretKey));
+            
             builder.Services.AddMvc().AddMvcOptions(e => e.EnableEndpointRouting = false);
             builder.Services.AddMvc().AddMvcOptions(options => options.SuppressAsyncSuffixInActionNames = false);
             var app = builder.Build();
