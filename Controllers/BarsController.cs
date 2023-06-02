@@ -69,11 +69,30 @@ namespace WatchMe.Controllers
             return await _barService.SearchSport(sport);
         }
 
+        /// <summary>
+        /// Creates a new bar.
+        /// </summary>
+        /// <param name="imageFile">The image file to upload.</param>
+        /// <param name="bar">The bar data.</param>
+        /// <returns>The created bar.</returns>
         [HttpPost]
-        [Consumes("multipart/form-data")]
-        public async Task<IActionResult> PostBarAsync(IFormFile? imageFile, Bar bar)
+        public async Task<IActionResult> PostBarAsync(
+            IFormFile? imageFile,
+            string name,
+            string location,
+            int capacity,
+            string description,
+            int userId
+        )
         {
-            return await _barService.PostBarAsync(bar, imageFile);
+            return await _barService.PostBarAsync(
+                imageFile,
+                name,
+                location,
+                capacity,
+                description,
+                userId
+            );
         }
 
         [HttpPut("{id}")]

@@ -89,8 +89,25 @@ namespace WatchMe.Services
             return new OkObjectResult(bars);
         }
 
-        public async Task<IActionResult> PostBarAsync(Bar bar, IFormFile imageFile)
+        public async Task<IActionResult> PostBarAsync(
+            IFormFile? imageFile,
+            string name,
+            string location,
+            int capacity,
+            string description,
+            int userId
+        )
         {
+            var bar = new Bar
+            {
+                Name = name,
+                Location = location,
+                Capacity = capacity,
+                Description = description,
+                UserId = userId,
+                Shows = null,
+                ImageUrl = null
+            };
             if (imageFile != null && imageFile.Length > 0)
             {
                 using (Stream stream = imageFile.OpenReadStream())
