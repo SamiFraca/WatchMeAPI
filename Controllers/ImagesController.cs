@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using WatchMe.Models;
 using WatchMe.Services;
-
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 namespace WatchMe.Controllers
 {
     [ApiController]
@@ -26,10 +27,23 @@ namespace WatchMe.Controllers
                 {
                     string fileName = file.FileName;
                     string imageUrl = await _blobStorageService.UploadImageAsync(fileName, stream);
-                    // Save the imageUrl or perform additional actions
                 }
             }
             return Json(new { success = true });
+        }
+
+        [HttpPut]
+        public async Task<Bar> UpdateImage(IFormFile file, int id)
+        {
+            if (file != null && file.Length > 0 && id != 0)
+            {
+                using (Stream stream = file.OpenReadStream())
+                {
+                    string fileName = file.FileName;
+                    return await _blobStorageService.UpdateImageAsync(fileName, stream,id);
+                }
+            }
+            throw new ArgumentException("Invalid file or ID provided.");
         }
 
         [HttpGet]
@@ -38,7 +52,7 @@ namespace WatchMe.Controllers
             Stream imageStream = await _blobStorageService.GetImageAsync(fileName);
 
             // Return the image stream as a file response
-            return File(imageStream, "image/jpeg"); 
+            return File(imageStream, "image/jpeg");
         }
     }
 }
