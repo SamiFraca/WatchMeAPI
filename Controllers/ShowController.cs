@@ -84,12 +84,12 @@ namespace WatchMe.Controllers
         }
 
         [HttpPatch("{id}")]
-        public async Task<IActionResult> PatchBarAsync(
+        public async Task<IActionResult> PatchShowAsync(
             [FromBody] JsonPatchDocument<Show> show,
             [FromRoute] int id
         )
         {
-            var updatedBar = await _showsService.UpdateBarPatchAsync(id, show);
+            var updatedBar = await _showsService.UpdateShowPatchAsync(id, show);
             if (updatedBar == null)
             {
                 return NotFound();

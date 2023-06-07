@@ -86,7 +86,7 @@ namespace WatchMe.Services
             return await _showRepository.DeleteShow(Show);
         }
 
-        public async Task<Show> UpdateBarPatchAsync(int id, JsonPatchDocument<Show> show)
+        public async Task<Show> UpdateShowPatchAsync(int id, JsonPatchDocument<Show> show)
         {
             var showQuery = await _dbContext.Shows.FirstOrDefaultAsync(show => show.Id == id);
             if (showQuery == null)
