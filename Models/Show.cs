@@ -12,10 +12,8 @@ namespace WatchMe.Models
         public int Id { get; set; }
         public string Title { get; set; }
 
-        [JsonIgnore]
         public DateTime Start { get; set; }
 
-        [JsonIgnore]
         public DateTime End { get; set; }
 
         [SwaggerSchema("MM/dd HH:mm")]
