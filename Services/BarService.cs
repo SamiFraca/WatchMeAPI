@@ -180,4 +180,5 @@ namespace WatchMe.Services
             return await _barRepository.DeleteBar(Bar);
         }
     }
+
 }
