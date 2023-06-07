@@ -6,10 +6,12 @@ using Microsoft.EntityFrameworkCore;
 using WatchMe.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
+
 namespace WatchMe.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [EnableCors("AllowSpecificOrigins")]
     public class UsersController : ControllerBase
     {
         //  public static List<User> allUser = User.GetUsersFromJSON();
@@ -49,7 +51,7 @@ namespace WatchMe.Controllers
         //                 return NotFound();
         //             }
         //        }
-    [HttpGet("{id}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id, string token)
         {
             var user = await _userService.GetUser(id, token);
@@ -64,6 +66,7 @@ namespace WatchMe.Controllers
             //     return NotFound();
             // }
         }
+
         [HttpPost("auth/login")]
         public async Task<ActionResult<User>> LoginVerify(string name, string password)
         {
