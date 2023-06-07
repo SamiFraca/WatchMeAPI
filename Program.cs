@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using WatchMe.Services;
 using WatchMe.Repositories;
 using WatchMe.DTOs;
+
 namespace WatchMe
 {
     public class Program
@@ -39,7 +40,11 @@ namespace WatchMe
                     name: "AllowSpecificOrigins",
                     policy =>
                     {
-                        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                        policy
+                            .AllowAnyOrigin()
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .WithMethods("PATCH");
                     }
                 );
             });
@@ -47,9 +52,11 @@ namespace WatchMe
                 .GetSection("AuthService")
                 .GetValue<string>("SecretKey");
             builder.Services.AddSingleton(new AuthService(jwtSecretKey));
-            
+
             builder.Services.AddMvc().AddMvcOptions(e => e.EnableEndpointRouting = false);
-            builder.Services.AddMvc().AddMvcOptions(options => options.SuppressAsyncSuffixInActionNames = false);
+            builder.Services
+                .AddMvc()
+                .AddMvcOptions(options => options.SuppressAsyncSuffixInActionNames = false);
             var app = builder.Build();
             app.UseAuthentication();
 
