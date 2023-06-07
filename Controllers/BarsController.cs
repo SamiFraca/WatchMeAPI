@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using WatchMe.Models;
 using WatchMe.Services;
+using Microsoft.EntityFrameworkCore;
+using WatchMe.Data;
+
 
 namespace WatchMe.Controllers
 {
@@ -12,10 +15,15 @@ namespace WatchMe.Controllers
     public class BarsController : ControllerBase
     {
         private readonly BarService _barService;
+        private readonly DataContext _dbContext;
 
-        public BarsController(BarService barService)
+        public BarsController(
+            BarService barService,
+            DataContext dbContext
+        )
         {
             _barService = barService;
+            _dbContext = dbContext;
         }
 
         [HttpGet]
