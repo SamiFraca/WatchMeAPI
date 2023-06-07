@@ -8,9 +8,12 @@ using WatchMe.Models;
 using WatchMe.Services;
 using WatchMe.Repositories;
 using Microsoft.AspNetCore.JsonPatch;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 
 namespace WatchMe.Controllers
 {
+    [EnableCors("AllowSpecificOrigins")]
     [ApiController]
     [Route("[controller]")]
     public class ShowsController : ControllerBase
