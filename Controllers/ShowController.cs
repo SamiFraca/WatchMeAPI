@@ -7,6 +7,7 @@ using WatchMe.Data;
 using WatchMe.Models;
 using WatchMe.Services;
 using WatchMe.Repositories;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace WatchMe.Controllers
 {
@@ -16,6 +17,7 @@ namespace WatchMe.Controllers
     {
         private readonly ShowsService _showsService;
         private readonly BarService _barService;
+
         public ShowsController(ShowsService showService, BarService barService)
         {
             _showsService = showService;
@@ -79,6 +81,20 @@ namespace WatchMe.Controllers
         {
             var result = await _showsService.DeleteShow(id);
             return Ok(result);
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchBarAsync(
+            [FromBody] JsonPatchDocument<Show> show,
+            [FromRoute] int id
+        )
+        {
+            var updatedBar = await _showsService.UpdateBarPatchAsync(id, show);
+            if (updatedBar == null)
+            {
+                return NotFound();
+            }
+            return Ok(updatedBar);
         }
     }
 }

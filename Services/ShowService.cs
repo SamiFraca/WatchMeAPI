@@ -3,7 +3,7 @@ using WatchMe.Data;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using WatchMe.Repositories;
-
+using Microsoft.AspNetCore.JsonPatch;
 namespace WatchMe.Services
 {
     public class ShowsService
@@ -84,6 +84,19 @@ namespace WatchMe.Services
                 throw new Exception("Show not found");
             }
             return await _showRepository.DeleteShow(Show);
+        }
+
+        public async Task<Show> UpdateBarPatchAsync(int id, JsonPatchDocument<Show> show)
+        {
+            var showQuery = await _dbContext.Shows.FirstOrDefaultAsync(show => show.Id == id);
+            if (showQuery == null)
+            {
+                return showQuery;
+            }
+            show.ApplyTo(showQuery);
+            await _dbContext.SaveChangesAsync();
+
+            return showQuery;
         }
     }
 }
